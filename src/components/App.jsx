@@ -1,16 +1,26 @@
-export const App = () => {
+import { useSelector } from 'react-redux';
+import { getContacts } from 'redux/contacts-slice';
+import Container from 'components/Container/Container';
+import Header from 'components/Header/Header';
+import ContactList from 'components/ContactList/ContactList';
+import Filter from 'components/Filter/Filter';
+import Message from 'components/Message/Message';
+
+function App() {
+  const contacts = useSelector(getContacts);
+
   return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
-    </div>
+    <>
+      <Container>
+        <Header />
+      </Container>
+
+      <Container title="Contacts">
+        <Filter />
+        {contacts.length > 0 ? <ContactList /> : <Message />}
+      </Container>
+    </>
   );
-};
+}
+
+export default App;
