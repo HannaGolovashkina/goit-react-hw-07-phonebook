@@ -1,6 +1,11 @@
 import styled from '@emotion/styled';
 import { Field } from 'formik';
 
+export const MainTitle = styled.h2`
+  margin-top: 100px;
+  margin-bottom: 50px;
+`;
+
 export const Label = styled.label`
   display: flex;
   flex-direction: column;
@@ -16,7 +21,8 @@ export const Title = styled.span`
 export const StyledField = styled(Field)`
   height: 40px;
   padding: 0 10px 0 10px;
-  border: 1px solid var(--second-bg-color);
+  border: none;
+  border-bottom: 1px solid var(--second-bg-color);
   outline: none;
   color: var(--main-text-color);
   font-size: 14px;

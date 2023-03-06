@@ -1,92 +1,106 @@
-// import { useState } from 'react';
-import { Label, Title, Input, Button } from './ContactForm.styled';
-// import { Report } from 'notiflix/build/notiflix-report-aio';
-// import { nanoid } from 'nanoid';
-// import { useDispatch } from 'react-redux';
-// import { addContact } from 'redux/contactsOperations';
+import { Label, Title, StyledField, Button } from './ContactForm.styled';
+import {
+  useCreateContactMutation,
+  useGetContactsQuery,
+} from 'redux/contact-api';
+import { Formik, Form, ErrorMessage } from 'formik';
+import * as yup from 'yup';
+import { useNavigate } from 'react-router-dom';
+import { Report } from 'notiflix';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
+function ContactForm() {
+  const navigate = useNavigate();
 
-const ContactForm = ({
-  initialValues = { name: '', number: '' },
-  onSubmit,
-  btnText,
-}) => {
-  const onHandleSubmit = async (values, actions) => {
-    await onSubmit(values);
-    actions.setSubmitting(false);
-    actions.resetForm();
+  const [createContact] = useCreateContactMutation();
+  const { data: contacts } = useGetContactsQuery();
+
+  const onSubmitForm = ({ name, phone, email, city, company }) => {
+    contacts.some(contact => contact.name === name)
+      ? Report.warning(
+          `${name}`,
+          'This user is already in the contact list.',
+          'OK',
+        )
+      : createContact({ name, phone, email, city, company });
+
+    navigate('/');
+
+    Notify.success(`The ${name} has been added to your contact list.`);
   };
-// )=> {
-//   const [name, setName] = useState('');
-//   const [number, setNumber] = useState('');
 
-  // const onChangeName = e => setName(e.currentTarget.value);
-  // const onChangeNunber = e => setNumber(e.currentTarget.value);
+  const contactSchema = yup.object({
+    name: yup.string().required().min(3).max(30),
+    phone: yup.number().required(),
+    email: yup.string().email(),
+    city: yup.string().min(3).max(30),
+    company: yup.string().min(3).max(50),
+  });
 
-  // const contacts = useSelector(addContact);
-  // const dispatch = useDispatch();
-
-  // const onSubmitForm = async (values, actions) => {
-  //   e.preventDefault();
-    // const newElement = { id: nanoid(), name, number };
-    // contacts.some(contact => contact.name === name)
-      // ? Report.warning(
-      //     `${name}`,
-      //     'This user is already in the contact list.',
-      //     'OK',
-      //   )
-  //     // : 
-  //     dispatch(addContact({name, number}));
-  //   reset();
-  //   onClose();
-  // };
-
-  // const reset = () => {
-  //   setName('');
-  //   setNumber('');
-  // };
-  // const handleChange = e => {
-  //   const { name, value } = e.target;
-  //   switch (name) {
-  //     case 'name':
-  //       setName(value);
-  //       break;
-  //     case 'number':
-  //       setNumber(value);
-  //       break;
-  //     default:
-  //       return;
-  //   }
-  // };
-  
   return (
-    <form onSubmit={onHandleSubmit}>
-      <Label>
-        <Title>Name</Title>
-        <Input
-          onChange={onSubmit}
-          type="text"
-          name="name"
-          // value={name}
-          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-          required
-        />
-      </Label>
-      <Label>
-        <Title>Number</Title>
-        <Input
-          onChange={onSubmit}
-          type="tel"
-          name="number"
-          // value={number}
-          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-          required
-        />
-      </Label>
-      <Button type="submit">Add contact</Button>
-    </form>
+    <Formik
+      initialValues={{ name: '', phone: '', email: '', city: '', company: '' }}
+      onSubmit={onSubmitForm}
+      validationSchema={contactSchema}
+    >
+      {({ values, handleChange, handleSubmit, isSubmitting }) => (
+        <Form onSubmit={handleSubmit}>
+          <Label>
+            <Title>Name</Title>
+            <StyledField
+              type="text"
+              name="name"
+              onChange={handleChange}
+              value={values.name}
+            />
+            <ErrorMessage name="name" component="div" />
+          </Label>
+          <Label>
+            <Title>Phone</Title>
+            <StyledField
+              type="tel"
+              name="phone"
+              onChange={handleChange}
+              value={values.phone}
+            />
+            <ErrorMessage name="phone" component="div" />
+          </Label>
+          <Label>
+            <Title>Email</Title>
+            <StyledField
+              type="email"
+              name="email"
+              onChange={handleChange}
+              value={values.email}
+            />
+            <ErrorMessage name="email" component="div" />
+          </Label>
+          <Label>
+            <Title>City</Title>
+            <StyledField
+              type="text"
+              name="city"
+              onChange={handleChange}
+              value={values.city}
+            />
+            <ErrorMessage name="city" component="div" />
+          </Label>
+          <Label>
+            <Title>Company</Title>
+            <StyledField
+              type="text"
+              name="company"
+              onChange={handleChange}
+              value={values.company}
+            />
+            <ErrorMessage name="company" component="div" />
+          </Label>
+          <Button type="submit" disabled={isSubmitting}>
+            Add contact
+          </Button>
+        </Form>
+      )}
+    </Formik>
   );
 }
 
