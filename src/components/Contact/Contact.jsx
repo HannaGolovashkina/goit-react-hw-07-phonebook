@@ -1,8 +1,11 @@
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
+import { useDeleteContactMutation } from 'redux/contacts-slice';
 import { FaTrash, FaUserAlt } from 'react-icons/fa';
 import { Wrapper, Icon, Number, Button } from './Contact.styled';
 
-const Contact =({ name, number, onDeleteContact })=> {
+export const Contact =({ name, number,id })=> {
+  const [deleteContact, { isLoading: isAdding, isSuccess }] =
+    useDeleteContactMutation();
   return (
     <>
       <Wrapper>
@@ -13,7 +16,7 @@ const Contact =({ name, number, onDeleteContact })=> {
       </Wrapper>
       <Wrapper>
         <Number>{number}</Number>
-        <Button type="button" onClick={onDeleteContact}>
+        <Button type="button" onClick={() => deleteContact(id)}>
           <FaTrash />
         </Button>
       </Wrapper>
@@ -21,10 +24,10 @@ const Contact =({ name, number, onDeleteContact })=> {
   );
 }
 
-Contact.prototype = {
-  name: PropTypes.string.isRequired,
-  number: PropTypes.string.isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
-};
+// Contact.prototype = {
+//   name: PropTypes.string.isRequired,
+//   number: PropTypes.string.isRequired,
+//   onDeleteContact: PropTypes.func.isRequired,
+// };
 
 export default Contact;

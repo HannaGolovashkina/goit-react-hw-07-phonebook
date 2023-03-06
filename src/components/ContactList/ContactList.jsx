@@ -1,39 +1,55 @@
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { deleteContact, fetchContacts } from 'redux/contactsOperations';
+// import { useEffect } from 'react';
+import { useGetContactsQuery } from 'redux/contacts-slice';
+// import { useSelector, useDispatch } from 'react-redux';
+// import { deleteContact, fetchContacts } from 'redux/contactsOperations';
 import Contact from 'components/Contact/Contact';
 
 import { Item } from './ContactList.styled';
 
 const ContactList =()=> {
-  const filter = useSelector(state => state.filter);
-  const contacts = useSelector(state => state.contacts.items);
-  const dispatch = useDispatch();
+  const {
+    data: contacts,
+    isLoading,
+    isSuccess,
+    isError,
+  } = useGetContactsQuery();
+  // const filter = useSelector(state => state.filter);
+  // const contacts = useSelector(state => state.contacts.items);
+  // const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchContacts());
+  // }, [dispatch]);
   
-  const deleteSelectedContact = contactId => dispatch(deleteContact(contactId));
+  // const deleteSelectedContact = contactId => dispatch(deleteContact(contactId));
 
-  const filtredContacts = () => {
-    const normalizedFilter = filter.toLowerCase();
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalizedFilter),
-    );
-  };
+  // const filtredContacts = () => {
+  //   const normalizedFilter = filter.toLowerCase();
+  //   return contacts.filter(contact =>
+  //     contact.name.toLowerCase().includes(normalizedFilter),
+  //   );
+  // };
 
-  const filteredContactList = filtredContacts();
+  // const filteredContactList = filtredContacts();
 
   return (
     <ul>
-      {filteredContactList.map(({ id, name, number }) => {
+      {isError && (
+        <p>
+          {' '}
+          Oops! Something went wrong :( reboot the page and try again once.
+        </p>
+      )}
+      {/* {isLoading && <Loader />} */}
+      {isSuccess &&
+      //  contacts.map(contact => <Contact key={contact.id} {...contact} />)}
+      contacts.map(({ id, name, number }) => {
         return (
           <Item key={id}>
             <Contact
               name={name}
               number={number}
-              onDeleteContact={() => deleteSelectedContact(id)}
+              // onDeleteContact={() => deleteSelectedContact(id)}
               contactId={id}
             />
           </Item>
