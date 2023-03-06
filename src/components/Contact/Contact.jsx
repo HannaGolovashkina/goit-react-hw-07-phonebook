@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { FaTrash, FaUserAlt } from 'react-icons/fa';
 import { Wrapper, Icon, Number, Button } from './Contact.styled';
 
-function Contact({ name, number, onDeleteContact }) {
+const Contact =({ name, number, onDeleteContact })=> {
   return (
     <>
       <Wrapper>

@@ -3,16 +3,17 @@ import { Label, Title, Input, Button } from './ContactForm.styled';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import { nanoid } from 'nanoid';
 import { useSelector, useDispatch } from 'react-redux';
-import { addContact, getContacts } from 'redux/contacts-slice';
+import { addContact } from 'redux/contactsOperations';
 
-function ContactForm({ onClose }) {
+
+const ContactForm = ({ onClose })=> {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
   const onChangeName = e => setName(e.currentTarget.value);
   const onChangeNunber = e => setNumber(e.currentTarget.value);
 
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(addContact);
   const dispatch = useDispatch();
 
   const onSubmitForm = e => {
@@ -20,13 +21,14 @@ function ContactForm({ onClose }) {
 
     const newElement = { id: nanoid(), name, number };
 
-    contacts.some(contact => contact.name === name)
-      ? Report.warning(
-          `${name}`,
-          'This user is already in the contact list.',
-          'OK',
-        )
-      : dispatch(addContact(newElement));
+    // contacts.some(contact => contact.name === name)
+    //   ? Report.warning(
+    //       `${name}`,
+    //       'This user is already in the contact list.',
+    //       'OK',
+    //     )
+    //   : 
+      dispatch(addContact(newElement));
 
     reset();
     onClose();
