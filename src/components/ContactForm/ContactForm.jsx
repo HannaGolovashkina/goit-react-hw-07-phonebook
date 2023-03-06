@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Label, Title, Input, Button } from './ContactForm.styled';
-import { Report } from 'notiflix/build/notiflix-report-aio';
-import { nanoid } from 'nanoid';
-import { useSelector, useDispatch } from 'react-redux';
+// import { Report } from 'notiflix/build/notiflix-report-aio';
+// import { nanoid } from 'nanoid';
+import { useDispatch } from 'react-redux';
 import { addContact } from 'redux/contactsOperations';
 
 
@@ -10,26 +10,23 @@ const ContactForm = ({ onClose })=> {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const onChangeName = e => setName(e.currentTarget.value);
-  const onChangeNunber = e => setNumber(e.currentTarget.value);
+  // const onChangeName = e => setName(e.currentTarget.value);
+  // const onChangeNunber = e => setNumber(e.currentTarget.value);
 
-  const contacts = useSelector(addContact);
+  // const contacts = useSelector(addContact);
   const dispatch = useDispatch();
 
   const onSubmitForm = e => {
     e.preventDefault();
-
-    const newElement = { id: nanoid(), name, number };
-
+    // const newElement = { id: nanoid(), name, number };
     // contacts.some(contact => contact.name === name)
-    //   ? Report.warning(
-    //       `${name}`,
-    //       'This user is already in the contact list.',
-    //       'OK',
-    //     )
-    //   : 
-      dispatch(addContact(newElement));
-
+      // ? Report.warning(
+      //     `${name}`,
+      //     'This user is already in the contact list.',
+      //     'OK',
+      //   )
+      // : 
+      dispatch(addContact({name, number}));
     reset();
     onClose();
   };
@@ -38,13 +35,26 @@ const ContactForm = ({ onClose })=> {
     setName('');
     setNumber('');
   };
-
+  const handleChange = e => {
+    const { name, value } = e.target;
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'number':
+        setNumber(value);
+        break;
+      default:
+        return;
+    }
+  };
+  
   return (
     <form onSubmit={onSubmitForm}>
       <Label>
         <Title>Name</Title>
         <Input
-          onChange={onChangeName}
+          onChange={handleChange}
           type="text"
           name="name"
           value={name}
@@ -56,7 +66,7 @@ const ContactForm = ({ onClose })=> {
       <Label>
         <Title>Number</Title>
         <Input
-          onChange={onChangeNunber}
+          onChange={handleChange}
           type="tel"
           name="number"
           value={number}

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteContact, fetchContacts } from 'redux/contactsOperations';
 import Contact from 'components/Contact/Contact';
+
 import { Item } from './ContactList.styled';
 
 const ContactList =()=> {

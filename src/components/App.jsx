@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { getContacts } from 'redux/contacts-slice';
+// import { getContacts } from 'redux/contacts-slice';
 import Container from 'components/Container/Container';
 import Header from 'components/Header/Header';
 import ContactList from 'components/ContactList/ContactList';
