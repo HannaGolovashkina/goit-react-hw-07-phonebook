@@ -1,50 +1,50 @@
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  fetchContacts,
+  deleteContact,
+} from 'redux/contactsOperations';
+// import { deleteContact, getFilter, getContacts } from 'redux/contacts-slice';
 import Contact from 'components/Contact/Contact';
-import { List, Item } from './ContactList.styled';
-import Loader from 'components/Loader/Loader';
-import { useGetContactsQuery } from 'redux/contact-api';
-import NotFound from 'components/NotFound/NotFound';
-import { getFilter } from 'redux/contact-selectors';
+import { Item } from './ContactList.styled';
 
-function ContactList() {
-  const { data: contacts, isFetching, error } = useGetContactsQuery();
-  const { filter } = useSelector(state => getFilter(state));
+const ContactList =() => {
+  const contactsRedux = useSelector(state => state.contacts.items);
+  const filterRedux = useSelector(state => state.filter);
+  // const filter = useSelector(getFilter);
+  // const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
+  const deleteSelectedContact = contactId => dispatch(deleteContact(contactId));
 
   const filtredContacts = () => {
-    const normalizedFilter = filter.toLowerCase();
-    return (
-      contacts &&
-      contacts.filter(contact =>
-        contact.name.toLowerCase().includes(normalizedFilter),
-      )
+    const normalizedFilter = filterRedux.toLowerCase();
+    return contactsRedux.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter),
     );
   };
 
   const filteredContactList = filtredContacts();
 
   return (
-    <List>
-      {isFetching && <Loader />}
-      {error && <NotFound data={error.data} status={error.status} />}
-      {contacts &&
-        filteredContactList.map(
-          ({ id, name, phone, email, city, company, photo }) => {
-            return (
-              <Item key={id}>
-                <Contact
-                  id={id}
-                  name={name}
-                  phone={phone}
-                  email={email}
-                  city={city}
-                  company={company}
-                  photo={photo}
-                />
-              </Item>
-            );
-          },
-        )}
-    </List>
+    <ul>
+      {filteredContactList.map(({ id, name, number }) => {
+        return (
+          <Item key={id}>
+            <Contact
+              name={name}
+              number={number}
+              onDeleteContact={() => deleteSelectedContact(id)}
+              contactId={id}
+            />
+          </Item>
+        );
+      })}
+    </ul>
   );
 }
 

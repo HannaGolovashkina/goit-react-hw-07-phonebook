@@ -1,23 +1,25 @@
-import { Routes, Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+// import { getContacts } from 'redux/contacts-slice';
 import Container from 'components/Container/Container';
 import Header from 'components/Header/Header';
-import ContactsPage from 'pages/ContactsPage';
-import AddContactPage from 'pages/AddContactPage';
-import ContactInfoPage from 'pages/ContactInfoPage';
+import ContactList from 'components/ContactList/ContactList';
+import Filter from 'components/Filter/Filter';
+import Message from 'components/Message/Message';
 
 function App() {
+  // const contacts = useSelector(getContacts);
+  const contactsRedux = useSelector(state => state.contacts);
+
   return (
     <>
       <Container>
         <Header />
       </Container>
 
-      <Routes>
-        <Route path="/" element={<ContactsPage />} />
-        <Route path="/contacts/add" element={<AddContactPage />} />
-        <Route path="/contacts/:contactId/*" element={<ContactInfoPage />} />
-        <Route path="*" element={<ContactsPage />} />
-      </Routes>
+      <Container title="Contacts">
+        <Filter />
+        {contactsRedux.length > 0 ? <ContactList /> : <Message />}
+      </Container>
     </>
   );
 }

@@ -1,16 +1,29 @@
+import { useState } from 'react';
 import { Title, TitleColor, Button, ButtonText } from './Header.styled';
 import { BsFillPersonPlusFill } from 'react-icons/bs';
+import Modal from 'components/Modal/Modal';
+import ContactForm from 'components/ContactForm/ContactForm';
 
 function Header() {
+  const [showModal, setShowModal] = useState(false);
+
+  const toggleModal = () => setShowModal(prevShowModal => !prevShowModal);
+
   return (
     <>
-      <Title to="/">
+      <Title>
         Phone<TitleColor>book</TitleColor>
       </Title>
-      <Button to="/contacts/add">
+      <Button type="button" onClick={toggleModal}>
         <ButtonText>Add new contact</ButtonText>
         <BsFillPersonPlusFill size={20} />
       </Button>
+
+      {showModal && (
+        <Modal onClose={toggleModal}>
+          <ContactForm onClose={toggleModal} />
+        </Modal>
+      )}
     </>
   );
 }

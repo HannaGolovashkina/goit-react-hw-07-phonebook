@@ -1,8 +1,6 @@
 import styled from '@emotion/styled';
-import { Link } from 'react-router-dom';
 
-export const Title = styled(Link)`
-  display: block;
+export const Title = styled.h1`
   font-size: 36px;
   text-transform: uppercase;
   font-weight: 900;
@@ -16,7 +14,7 @@ export const TitleColor = styled.span`
   color: var(--accent-text-color);
 `;
 
-export const Button = styled(Link)`
+export const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;

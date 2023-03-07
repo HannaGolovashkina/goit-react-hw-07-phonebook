@@ -14,7 +14,7 @@ export const Text = styled.p`
 `;
 
 export const Input = styled.input`
-  width: 95%;
+  width: 70%;
   height: 40px;
   padding: 0 10px 0 10px;
   border: 1px solid var(--second-bg-color);

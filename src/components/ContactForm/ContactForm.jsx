@@ -1,73 +1,74 @@
-import { Label, Title, StyledField, Button } from './ContactForm.styled';
-import {
-  useCreateContactMutation,
-  useGetContactsQuery,
-} from 'redux/contact-api';
-import { Formik, Form, ErrorMessage } from 'formik';
-import * as yup from 'yup';
-import { useNavigate } from 'react-router-dom';
-import { Report } from 'notiflix';
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addContact } from 'redux/contactsOperations';
+import { Label, Title, Input, Button } from './ContactForm.styled';
+// import { Report } from 'notiflix/build/notiflix-report-aio';
+// import { nanoid } from 'nanoid';
+// import { useSelector, useDispatch } from 'react-redux';
+// import { addContact, getContacts } from 'redux/contacts-slice';
 
-function ContactForm() {
-  const navigate = useNavigate();
+function ContactForm({ onClose }) {
+  const dispatch = useDispatch();
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  const [createContact] = useCreateContactMutation();
-  const { data: contacts } = useGetContactsQuery();
+  const onChangeName = e => setName(e.currentTarget.value);
+  const onChangeNunber = e => setNumber(e.currentTarget.value);
 
-  const onSubmitForm = ({ name, phone }) => {
-    contacts.some(contact => contact.name === name)
-      ? Report.warning(
-          `${name}`,
-          'This user is already in the contact list.',
-          'OK',
-        )
-      : createContact({ name, phone });
+  // const contacts = useSelector(getContacts);
+  // const dispatch = useDispatch();
 
-    navigate('/');
+  const onSubmitForm = e => {
+    e.preventDefault();
 
-    Notify.success(`The ${name} has been added to your contact list.`);
+    const newElement = { name, number };
+
+    // contacts.some(contact => contact.name === name)
+    //   ? Report.warning(
+    //       `${name}`,
+    //       'This user is already in the contact list.',
+    //       'OK',
+    //     )
+    //   : 
+      dispatch(addContact(newElement));
+
+    reset();
+    onClose();
   };
 
-  const contactSchema = yup.object({
-    name: yup.string().required().min(3).max(30),
-    phone: yup.number().required(),
-  });
+  const reset = () => {
+    setName('');
+    setNumber('');
+  };
 
   return (
-    <Formik
-      initialValues={{ name: '', phone: ''}}
-      onSubmit={onSubmitForm}
-      validationSchema={contactSchema}
-    >
-      {({ values, handleChange, handleSubmit, isSubmitting }) => (
-        <Form onSubmit={handleSubmit}>
-          <Label>
-            <Title>Name</Title>
-            <StyledField
-              type="text"
-              name="name"
-              onChange={handleChange}
-              value={values.name}
-            />
-            <ErrorMessage name="name" component="div" />
-          </Label>
-          <Label>
-            <Title>Phone</Title>
-            <StyledField
-              type="tel"
-              name="phone"
-              onChange={handleChange}
-              value={values.phone}
-            />
-            <ErrorMessage name="phone" component="div" />
-          </Label>
-          <Button type="submit" disabled={isSubmitting}>
-            Add contact
-          </Button>
-        </Form>
-      )}
-    </Formik>
+    <form onSubmit={onSubmitForm}>
+      <Label>
+        <Title>Name</Title>
+        <Input
+          onChange={onChangeName}
+          type="text"
+          name="name"
+          value={name}
+          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+          required
+        />
+      </Label>
+      <Label>
+        <Title>Number</Title>
+        <Input
+          onChange={onChangeNunber}
+          type="tel"
+          name="number"
+          value={number}
+          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+          required
+        />
+      </Label>
+      <Button type="submit">Add contact</Button>
+    </form>
   );
 }
 
