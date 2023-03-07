@@ -8,10 +8,6 @@ import {
   Name,
   Label,
   Phone,
-  Email,
-  LocalData,
-  City,
-  Company,
   ButtonWrapper,
   Button,
   EditButton,
@@ -65,21 +61,7 @@ function ContactInfo() {
               <Label>Phone: </Label>
               {contact.phone}
             </Phone>
-            <Email>
-              <Label>Email: </Label>
-              {contact.email}
-            </Email>
           </PersonalData>
-          <LocalData>
-            <City>
-              <Label>City: </Label>
-              {contact.city}
-            </City>
-            <Company>
-              <Label>Company: </Label>
-              {contact.company}
-            </Company>
-          </LocalData>
           <ButtonWrapper>
             <Button type="button" onClick={togleModal}>
               <FaTrash />
