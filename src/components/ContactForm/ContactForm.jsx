@@ -15,14 +15,14 @@ function ContactForm() {
   const [createContact] = useCreateContactMutation();
   const { data: contacts } = useGetContactsQuery();
 
-  const onSubmitForm = ({ name, phone, email, city, company }) => {
+  const onSubmitForm = ({ name, phone }) => {
     contacts.some(contact => contact.name === name)
       ? Report.warning(
           `${name}`,
           'This user is already in the contact list.',
           'OK',
         )
-      : createContact({ name, phone, email, city, company });
+      : createContact({ name, phone });
 
     navigate('/');
 
@@ -32,14 +32,11 @@ function ContactForm() {
   const contactSchema = yup.object({
     name: yup.string().required().min(3).max(30),
     phone: yup.number().required(),
-    email: yup.string().email(),
-    city: yup.string().min(3).max(30),
-    company: yup.string().min(3).max(50),
   });
 
   return (
     <Formik
-      initialValues={{ name: '', phone: '', email: '', city: '', company: '' }}
+      initialValues={{ name: '', phone: ''}}
       onSubmit={onSubmitForm}
       validationSchema={contactSchema}
     >
@@ -64,36 +61,6 @@ function ContactForm() {
               value={values.phone}
             />
             <ErrorMessage name="phone" component="div" />
-          </Label>
-          <Label>
-            <Title>Email</Title>
-            <StyledField
-              type="email"
-              name="email"
-              onChange={handleChange}
-              value={values.email}
-            />
-            <ErrorMessage name="email" component="div" />
-          </Label>
-          <Label>
-            <Title>City</Title>
-            <StyledField
-              type="text"
-              name="city"
-              onChange={handleChange}
-              value={values.city}
-            />
-            <ErrorMessage name="city" component="div" />
-          </Label>
-          <Label>
-            <Title>Company</Title>
-            <StyledField
-              type="text"
-              name="company"
-              onChange={handleChange}
-              value={values.company}
-            />
-            <ErrorMessage name="company" component="div" />
           </Label>
           <Button type="submit" disabled={isSubmitting}>
             Add contact

@@ -9,10 +9,7 @@ import {
   Name,
   Number,
   Label,
-  Email,
   LocalData,
-  City,
-  Company,
   ButtonWrapper,
   Button,
 } from './Contact.styled';
@@ -21,7 +18,7 @@ import Modal from 'components/Modal/Modal';
 import useShowModal from 'hooks/useShowModal';
 import DeletingContact from 'components/DeletingContact/DeletingContact';
 
-function Contact({ id, name, phone, email, city, company, photo }) {
+function Contact({ id, name, phone,  photo }) {
   const { showModal, togleModal } = useShowModal(false);
 
   const navigate = useNavigate();
@@ -46,21 +43,8 @@ function Contact({ id, name, phone, email, city, company, photo }) {
               <Label>Phone: </Label>
               {phone}
             </Number>
-            <Email>
-              <Label>Email: </Label>
-              {email}
-            </Email>
+           
           </PersonalData>
-          <LocalData>
-            <City>
-              <Label>City: </Label>
-              {city}
-            </City>
-            <Company>
-              <Label>Company: </Label>
-              {company}
-            </Company>
-          </LocalData>
         </StyledLink>
         <ButtonWrapper>
           <Button type="button" onClick={togleModal}>
@@ -78,9 +62,6 @@ function Contact({ id, name, phone, email, city, company, photo }) {
 Contact.prototype = {
   name: PropTypes.string.isRequired,
   phone: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
-  city: PropTypes.string,
-  company: PropTypes.string,
   photo: PropTypes.string,
 };
 
