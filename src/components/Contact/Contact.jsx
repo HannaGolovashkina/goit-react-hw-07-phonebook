@@ -1,8 +1,7 @@
-// import PropTypes from 'prop-types';
 import { FaTrash, FaUserAlt } from 'react-icons/fa';
 import { Wrapper, Icon, Number, Button } from './Contact.styled';
 
-function Contact({ name, number, onDeleteContact }) {
+function Contact({ name, phone, onClick }) {
   return (
     <>
       <Wrapper>
@@ -12,8 +11,8 @@ function Contact({ name, number, onDeleteContact }) {
         <p>{name}</p>
       </Wrapper>
       <Wrapper>
-        <Number>{number}</Number>
-        <Button type="button" onClick={onDeleteContact}>
+        <Number>{phone}</Number>
+        <Button type="button" onClick={onClick}>
           <FaTrash />
         </Button>
       </Wrapper>
@@ -21,10 +20,5 @@ function Contact({ name, number, onDeleteContact }) {
   );
 }
 
-// Contact.prototype = {
-//   name: PropTypes.string.isRequired,
-//   number: PropTypes.string.isRequired,
-//   onDeleteContact: PropTypes.func.isRequired,
-// };
 
 export default Contact;

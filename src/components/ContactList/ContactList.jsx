@@ -4,22 +4,18 @@ import {
   fetchContacts,
   deleteContact,
 } from 'redux/contactsOperations';
-// import { deleteContact, getFilter, getContacts } from 'redux/contacts-slice';
 import Contact from 'components/Contact/Contact';
 import { Item } from './ContactList.styled';
 
 const ContactList =() => {
   const contactsRedux = useSelector(state => state.contacts.items);
   const filterRedux = useSelector(state => state.filter);
-  // const filter = useSelector(getFilter);
-  // const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
 
-  const deleteSelectedContact = contactId => dispatch(deleteContact(contactId));
 
   const filtredContacts = () => {
     const normalizedFilter = filterRedux.toLowerCase();
@@ -32,13 +28,14 @@ const ContactList =() => {
 
   return (
     <ul>
-      {filteredContactList.map(({ id, name, number }) => {
+      {filteredContactList.map(({ id, name, phone }) => {
         return (
           <Item key={id}>
             <Contact
               name={name}
-              number={number}
-              onDeleteContact={() => deleteSelectedContact(id)}
+              number={phone}
+              onClick={() => {
+                dispatch(deleteContact(id));}}
               contactId={id}
             />
           </Item>

@@ -4,7 +4,6 @@ import { Label, Text, Input } from './Filter.styled';
 
 function Filter() {
   const filterRedux = useSelector(state => state.filter);
-  // const filter = useSelector(getFilter);
   const dispatch = useDispatch();
 
   const changeFieldFilter = e => dispatch(changeFilterRedux(e.currentTarget.value));
